@@ -510,7 +510,7 @@ function loadViewWithItemNumber(args: listViewModule.ItemEventData) {
 
 function getTextFromNativeElementAt(listView: listViewModule.ListView, index: number): any {
 	if (listView.android) {
-		var nativeElement = listView.android.getChildAt(index);
+		var nativeElement = listView.android.ListView.getChildAt(index);
 		if (nativeElement instanceof android.view.ViewGroup) {
 			return (<android.widget.TextView>(<any>nativeElement.getChildAt(0))).getText();
 		}
@@ -523,7 +523,7 @@ function getTextFromNativeElementAt(listView: listViewModule.ListView, index: nu
 
 function getNativeViewCount(listView: listViewModule.ListView): number {
     if (listView.android) {
-        return listView.android.getChildCount();
+        return listView.android.ListView.getChildCount();
     }
     else if (listView.ios) {
         return listView.ios.visibleCells().count;
@@ -535,7 +535,7 @@ function getNativeViewCount(listView: listViewModule.ListView): number {
 
 function performNativeItemTap(listView: listViewModule.ListView, index: number): void {
     if (listView.android) {
-        listView.android.performItemClick(listView.android.getChildAt(index), index, listView.android.getAdapter().getItemId(index));
+        listView.android.ListView.performItemClick(listView.android.ListView.getChildAt(index), index, listView.android.ListView.getAdapter().getItemId(index));
     }
     else if (listView.ios) {
         // Calling selectRowAtIndexPathAnimatedScrollPosition will not tiger [Will|Did]SelectRowAtIndexPath callbacks.

@@ -50,9 +50,9 @@ declare module "ui/list-view" {
         public static isScrollingProperty: dependencyObservable.Property;
 
         /**
-         * Gets the native [android widget](http://developer.android.com/reference/android/widget/ListView.html) that represents the user interface for this component. Valid only when running on Android OS.
+         * Get the wrapped object of native Android ListView and SwipeRefreshLayout
          */
-        android: android.widget.ListView;
+        android: AndroidListView;
 
         /**
          * Gets the native [iOS view](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UITableView_Class/) that represents the user interface for this component. Valid only when running on iOS.
@@ -125,6 +125,18 @@ declare module "ui/list-view" {
          * The view that is associated to the item, for which the event is raised.
          */
         view: view.View;
+    }
+
+    /**
+     * Represents a wrapped object of native Android ListView and SwipeRefreshLayout
+     */
+    export interface AndroidListView {
+        RefreshLayout: android.support.v4.widget.SwipeRefreshLayout;
+
+        /**
+         * Native [android widget](http://developer.android.com/reference/android/widget/ListView.html) that represents the user interface for this component. Valid only when running on Android OS.
+         */
+        ListView: android.widget.ListView;
     }
 
     /**
