@@ -1,4 +1,6 @@
 ﻿import common = require("ui/web-view/web-view-common");
+import types = require("utils/types");
+import fs = require("file-system");
 import trace = require("trace");
 
 declare var exports;
@@ -78,6 +80,12 @@ export class WebView extends common.WebView {
         if (this._ios.loading) {
             this._ios.stopLoading();
         }
+        var fileName = types.isString(url) ? url.trim() : "";
+
+        if (fileName.indexOf("~/") === 0) {
+            url = "file://" + fs.path.join(fs.knownFolders.currentApp().path, fileName.replace("~/", ""));
+        }
+        
         this._ios.loadRequest(NSURLRequest.requestWithURL(NSURL.URLWithString(url)));
     }
 

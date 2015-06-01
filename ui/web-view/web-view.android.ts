@@ -1,4 +1,6 @@
 ﻿import common = require("ui/web-view/web-view-common");
+import types = require("utils/types");
+import fs = require("file-system");
 import trace = require("trace");
 
 declare var exports;
@@ -71,6 +73,13 @@ export class WebView extends common.WebView {
     public _loadUrl(url: string) {
         trace.write("WebView._loadUrl(" + url + ")", trace.categories.Debug);
         this._android.stopLoading();
+        
+        var fileName = types.isString(url) ? url.trim() : "";
+
+        if (fileName.indexOf("~/") === 0) {
+            url = "file://" + fs.path.join(fs.knownFolders.currentApp().path, fileName.replace("~/", ""));
+        }
+        console.log("URLLLL", url);
         this._android.loadUrl(url);
     }
 
