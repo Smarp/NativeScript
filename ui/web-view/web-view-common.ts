@@ -2,6 +2,8 @@
 import view = require("ui/core/view");
 import dependencyObservable = require("ui/core/dependency-observable");
 import proxy = require("ui/core/proxy");
+import types = require("utils/types");
+import fs = require("file-system");
 
 var urlProperty = new dependencyObservable.Property(
     "url",
@@ -40,6 +42,19 @@ export class WebView extends view.View implements definition.WebView {
 
     set url(value: string) {
         this._setValue(WebView.urlProperty, value);
+    }
+
+    public _getRealUrl(url: string): string {
+        if (!types.isString(url)) {
+            return "";
+        }
+        var fileName = url.trim();
+        // if url is, for example "~/my/path.ext"
+        if (fileName.substr(0,2) === "~/") {
+            // then realUrl is "file://bundle/id/location/my/path.ext"
+            return "file://" + fs.path.join(fs.knownFolders.currentApp().path, fileName.substr(2));
+        }
+        return url;
     }
 
     public _onLoadFinished(url: string, error?: string) {
@@ -92,4 +107,4 @@ export class WebView extends view.View implements definition.WebView {
     public reload() {
         throw new Error("This member is abstract.");
     }
-} 
+}
