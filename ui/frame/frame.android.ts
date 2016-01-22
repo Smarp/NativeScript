@@ -444,6 +444,12 @@ var NativeActivity = {
         this.super.onAttachFragment(fragment);
 
         if (!(<any>fragment).entry) {
+            //HACK to skip native fragments not controlled by ns
+            if (fragment.getTag() === "datePicker" || fragment.getTag() === "timePicker") {
+                return;
+            }
+            //End of the hack
+
             // There is no entry set to the fragment, so this must be destroyed fragment that was recreated by Android.
             // We should find its corresponding page in our backstack and set it manually.
             findPageForFragment(fragment, this.frame);
