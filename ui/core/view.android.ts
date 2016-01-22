@@ -16,7 +16,14 @@ var OWNER = "_owner";
 
 function onIdPropertyChanged(data: dependencyObservable.PropertyChangeData) {
     var view = <View>data.object;
-    view._nativeView.setTag(data.newValue);
+    //HACK to catch number conversion exception
+    try {
+        view._nativeView.setTag(data.newValue);
+    }
+    catch (e) {
+        console.log("error is " + e);
+    }
+    //HACK ends here
 }
 (<proxy.PropertyMetadata>viewCommon.View.idProperty.metadata).onSetNativeValue = onIdPropertyChanged;
 
