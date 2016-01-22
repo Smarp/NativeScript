@@ -75,7 +75,22 @@ function buildJavaOptions(options: http.HttpRequestOptions) {
 
     var javaOptions = new com.tns.Async.Http.RequestOptions();
 
-    javaOptions.url = options.url.replace("%", "%25");
+    //HACK to fix the encoding    https://github.com/NativeScript/NativeScript/pull/1228
+    var originalUrl = options.url;
+    try {
+        var decodedUrl = decodeURI(originalUrl);
+        if (decodedUrl === originalUrl) {
+            //the url is not encoded, fix the %
+            options.url.replace("%", "%25");
+        }
+    }
+    catch (e) {
+        //This means something crash with js decode encode (url malformed)
+        // if we don't catch it will be and infinite loop, revert changes
+        options.url = originalUrl;
+    }
+    javaOptions.url = options.url;
+    //End of the HACK
 
     if (types.isString(options.method)) {
         javaOptions.method = options.method;
