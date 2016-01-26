@@ -20,23 +20,12 @@ export function request(options: http.HttpRequestOptions): Promise<http.HttpResp
                 sessionConfig, null, queue);
 
             //HACK to fix the encoding  https://github.com/NativeScript/NativeScript/pull/1228
-            var urlRequest = NSMutableURLRequest.requestWithURL(
-                -                NSURL.URLWithString(options.url));
-            var originalUrl = options.url;
-            try {
-                var decodedUrl = decodeURI(originalUrl);
-                if (decodedUrl === originalUrl) {
-                    //the url is not encoded, fix the %
-                    urlRequest = NSMutableURLRequest.requestWithURL(
-                        NSURL.URLWithString(options.url.replace("%", "%25")));
-                }
+            
+            if (decodeURI(options.url) === options.url) {
+                //the url is not encoded, fix the %
+                options.url = options.url.replace("%", "%25");
             }
-            catch (e) {
-                //This means something crash with js decode encode (url malformed)
-                // if we don't catch it will be and infinite loop, revert changes
-                urlRequest = NSMutableURLRequest.requestWithURL(
-                    -                                  NSURL.URLWithString(options.url));
-            }
+            var urlRequest = NSMutableURLRequest.requestWithURL(NSURL.URLWithString(options.url));
             //End of the HACK
 
             urlRequest.HTTPMethod = types.isDefined(options.method) ? options.method : GET;
